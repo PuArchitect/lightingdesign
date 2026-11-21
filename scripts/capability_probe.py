@@ -95,6 +95,12 @@ def probe() -> dict:
         level = "L1"
         reason = "缺关键库：只能出模板与人工填表，报告须标 _L1"
 
+    # 允许人为强制降级：既方便用户保守使用，也让"降级路径"可被确定性测试
+    forced = os.environ.get("LIGHTINGDESIGN_FORCE_LEVEL", "").strip().upper()
+    if forced in ("L1", "L2", "L3"):
+        level = forced
+        reason = f"由环境变量 LIGHTINGDESIGN_FORCE_LEVEL 强制为 {forced}"
+
     missing = [m for m, v in mods.items() if not v["available"]]
     missing_bins = [k for k, v in bins.items() if not v]
 

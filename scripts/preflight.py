@@ -135,8 +135,11 @@ def check_xlsx(path: Path) -> None:
 
 
 def check_manifest() -> None:
+    if not MANIFEST_NAME:
+        add("材质清单", None, "未指定/未找到（--manifest 指定；无清单则跳过）")
+        return
     p = OUT / MANIFEST_NAME
-    if not p.exists():
+    if not p.is_file():
         add(f"材质清单: {MANIFEST_NAME}", None,
             f"未找到（用 --manifest 指定；无清单则跳过该项）")
         return

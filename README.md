@@ -1,4 +1,4 @@
-﻿# AI for Interior Lighting Designers · lightingdesign
+# AI for Interior Lighting Designers · lightingdesign
 
 For designers who turn spatial intent into light — private rooms, bars, restaurants, and the tiny teams working beside them. This skill is shared as a practical companion for turning "it looks right" into numbers someone else can check: materials, fixtures, illuminance, and a report that says honestly what it does not know. Cheers.
 
@@ -51,12 +51,21 @@ python scripts/bootstrap.py --install --yes   # 补齐（需网络；无需管�
 | DeepSeek Harness | point the workspace at this repo, or copy `SKILL.md` into your skills directory | L3 |
 | ChatGPT work / codex | repo root as working dir; `AGENTS.md` is picked up automatically | L3 |
 | zcode | same; keep single commands under 60 s, write results to disk | L2–L3 |
-| workbuddy | same; designed conservatively for L2 — one stage per step, file-based checkpoints | L2 |
+| workbuddy | same; **read `WORKBUDDY.md` first** — a four-step condensed version for small-context agents | L2 |
+
+**Tested / 已验证**
+
+| Platform | Status |
+|---|---|
+| DeepSeek Harness | ✅ full run (L3), report + sheets + self-check, 31 items 0 FAIL |
+| workbuddy | ✅ full run (L2 path), 2026-11-21 — `WORKBUDDY.md` was written from that run |
+| zcode / codex | ⏳ not yet exercised end-to-end |
 
 ### Where to read next / 接下来读什么
 
 - `SKILL.md` — the workflow itself: five hard rules, seven gated stages, the downgrade ladder, and seven anti-patterns that all really happened.
 - `AGENTS.md` — repository-level rules (auto-read by codex / zcode / workbuddy).
+- `WORKBUDDY.md` — condensed four-step version for small-context platforms. **Don't read `SKILL.md` in full on those.**
 - `USAGE.md` — the longer human-facing guide.
 - `templates/` — handover checklist, material-table template, report skeleton.
 

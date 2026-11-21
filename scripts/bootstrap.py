@@ -216,6 +216,11 @@ def main() -> int:
     else:
         level, why = "L1", "缺关键库：只能出模板与人工填表，报告须标 _L1"
 
+    # 允许人为强制降级：既方便保守使用，也让"降级路径"可被确定性测试
+    forced = os.environ.get("LIGHTINGDESIGN_FORCE_LEVEL", "").strip().upper()
+    if forced in ("L1", "L2", "L3"):
+        level, why = forced, f"由环境变量 LIGHTINGDESIGN_FORCE_LEVEL 强制为 {forced}"
+
     # ---- 写报告
     lines = [
         "# 环境自举报告",

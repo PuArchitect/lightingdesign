@@ -1,4 +1,4 @@
-# 使用说明（详细）
+﻿# 使用说明（详细）
 
 > 门面见 `README.md`；技能本体见 `SKILL.md`；仓库规则见 `AGENTS.md`。
 > 本文件是给人看的长期参考：四个平台怎么配、workbuddy 专项、质量怎么保证、怎么迭代。
@@ -13,6 +13,7 @@ lightingdesign/
 ├── SKILL.md                技能本体（铁律 / 七阶段门禁 / 降级阶梯 / 反模式）
 ├── AGENTS.md               仓库级硬规则（codex / zcode / workbuddy 自动读）
 ├── USAGE.md                本文件
+├── WORKBUDDY.md            弱平台四步精简版（workbuddy 实测后写成）
 ├── scripts/
 │   ├── bootstrap.py        环境自举：扫描 → 补齐 → 复验（支持离线 wheels）
 │   ├── capability_probe.py 轻量探针（只报不装）
@@ -68,7 +69,7 @@ python scripts/bootstrap.py --install --offline --yes   # 用 wheels/ 离线补�
 | **DeepSeek Harness** | 工作目录指向本仓库，或把 `SKILL.md` 放进 skills 目录 | L3 |
 | **ChatGPT work / codex** | 仓库根作为工作目录，`AGENTS.md` 自动生效 | L3（先自举） |
 | **zcode** | 同上；长任务拆批，每批产物落盘 | L2–L3 |
-| **workbuddy** | 同上；**默认按 L2 设计** | L2 |
+| **workbuddy** | 同上；**默认按 L2 设计**；已本机实测通过（2026-11-21） | L2 |
 
 四个平台都能读 `AGENTS.md`，这是最稳的公共入口。
 
