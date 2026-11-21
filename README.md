@@ -33,7 +33,7 @@ Clone this repository into the working directory of your agent, then run the boo
 把这个仓库克隆到你 Agent 的工作目录，然后跑一次自举：
 
 ```bash
-git clone https://github.com/HelloJack9811/lightingdesign.git
+git clone https://github.com/PuArchitect/lightingdesign.git
 cd lightingdesign
 python scripts/bootstrap.py                # 只体检：缺什么、现在什么级别
 python scripts/bootstrap.py --install --yes   # 补齐（需网络；无需管理员权限）

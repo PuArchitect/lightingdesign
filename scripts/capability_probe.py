@@ -21,6 +21,9 @@ import shutil
 import sys
 from pathlib import Path
 
+HERE = Path(__file__).resolve().parent
+REPO = HERE.parent
+
 # 模块名 -> 用途
 PY_MODULES = {
     "numpy": "数值计算",
@@ -82,20 +85,18 @@ def probe() -> dict:
     sheet_ok = mods["openpyxl"]["available"]
     doc_ok = mods["docx"]["available"]
 
-    if radiance_ok and plot_ok and sheet_ok:
+    if radiance_ok and plot_ok and sheet_ok and mods["numpy"]["available"]:
         level = "L3"
         reason = "可做辐射计算 + 图版 + 表格 + 报告"
     elif plot_ok and sheet_ok:
         level = "L2"
-        reason = "无 Radiance：只做直射估算与表格图版，报告须标 _L2"
+        reason = "无 Radiance 或缺 numpy：只做直射估算与表格图版，报告须标 _L2"
     else:
         level = "L1"
         reason = "缺关键库：只能出模板与人工填表，报告须标 _L1"
 
     missing = [m for m, v in mods.items() if not v["available"]]
     missing_bins = [k for k, v in bins.items() if not v]
-    if not doc_ok:
-        missing.append("docx(报告将无法自动生成)")
 
     return {
         "level": level,
@@ -140,7 +141,8 @@ def main() -> int:
         pass
 
     ap = argparse.ArgumentParser()
-    ap.add_argument("--out", type=Path, default=Path("capabilities.json"))
+    ap.add_argument("--out", type=Path, default=REPO / "capabilities.json",
+                    help="输出路径（默认仓库根，与 bootstrap.py 一致）")
     args = ap.parse_args()
 
     cap = probe()

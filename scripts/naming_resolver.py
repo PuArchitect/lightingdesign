@@ -159,12 +159,10 @@ def resolve(name: str, layer: str | None = None,
 
     r, g, b, spec, rough, conf = OPTICS[phys]
 
-    # --- 明暗修饰
+    # --- 明暗修饰（启发式）
     for keys, k in MODIFIERS:
         if any(w in low for w in keys):
             r, g, b = r * k, g * k, b * k
-            if conf == "medium":
-                conf = "medium"
             break
 
     # --- 部位
@@ -177,20 +175,7 @@ def resolve(name: str, layer: str | None = None,
     if part == "unknown":
         warns.append(f"部位未判定（材质「{n}」，图层「{layer or '—'}」）")
 
-    # --- 项目覆盖
-    hit = None
-    if overrides:
-        for key in (orig, n):
-            if key in overrides:
-                hit = overrides[key]
-                break
-    if hit is not None:
-        ov = hit
-        r, g, b = ov[0], ov[1], ov[2]
-        src, conf = "owner-confirmed", "high"
-
-    # 铜系：金属 + 暖色偏移（比纯 METAL 的灰更贴近实际）
-    copper = locals().get("copper", False) or any(c in low for c in COPPER)
+    # --- 铜系（启发式：金属 + 暖色偏移，比纯 METAL 的灰贴近实际）
     if copper:
         r, g, b = 0.320, 0.240, 0.160
         spec, rough = 0.30, 0.10
@@ -198,24 +183,51 @@ def resolve(name: str, layer: str | None = None,
             conf = "medium"
         warns.append(f"「{n}」疑似铜/黄铜，已按铜系取值；请确认是实铜还是涂层")
 
-    # 明暗修饰不应把深色木/石压到不物理的低值
+    # --- 物理下限（启发式：修饰词不应把深色木/石压到不物理的低值）
     floor_rgb = {"WOOD": 0.060, "STONE": 0.090, "METAL": 0.060}.get(phys, 0.030)
     r, g, b = max(r, floor_rgb), max(g, floor_rgb), max(b, floor_rgb)
 
     if phys == "DEFAULT" and src == "name-prefix":
         warns.append(f"「{n}」是占位材质（Default/DEFAULT 系），必须由业主确认实际材料")
 
+    # --- 项目覆盖：最后一步，一票否决。
+    # 任何启发式（修饰词 / 铜系 / floor 钳制）都不得改写业主确认值，
+    # 否则报告会用着 A 的数值、却标着"业主确认"——那是诚信问题，不是精度问题。
+    hit = None
+    if overrides:
+        for key in (orig, n):
+            if key in overrides:
+                hit = overrides[key]
+                break
+    if hit is not None:
+        r, g, b = float(hit[0]), float(hit[1]), float(hit[2])
+        src, conf = "owner-confirmed", "high"
+        # 启发式阶段基于名字的猜测（铜系/占位）在人工确认后不再成立，撤掉
+        warns = [w for w in warns if ("铜" not in w and "占位" not in w)]
+
     return Resolution(name=orig, physical=phys, part=part, rgb=(r, g, b),
                       spec=spec, rough=rough, confidence=conf, source=src, warnings=warns)
 
 
 def resolve_all(names: list[str], profile: dict | None = None,
-                overrides: dict | None = None) -> dict:
+                overrides: dict | None = None, strict: bool = False) -> dict:
+    """批量解析。
+
+    strict=True 时，只要有材质落到 DEFAULT 且未经业主确认，就抛异常中止
+    —— 这是 SKILL.md「未映射的材质必须报错中止」的可执行版本。
+    （包内没有建壳脚本，所以中止必须在这里发生，不能指望调用方自觉。）
+    """
     out = {}
     unmapped = []
     for n in names:
         res = resolve(n, profile=profile, overrides=overrides)
         out[n] = res.as_dict()
-        if res.physical == "DEFAULT" and res.source == "fallback":
+        # 占位材质（Default / DEFAULT-*）同样算未映射，除非业主已确认
+        if res.physical == "DEFAULT" and res.source != "owner-confirmed":
             unmapped.append(n)
+    if strict and unmapped:
+        raise ValueError(
+            "存在未确认的占位/未识别材质，已中止："
+            + "、".join(unmapped)
+            + "。请补进材料表（overrides）或 conventions 档案后重试。")
     return {"resolved": out, "unmapped": unmapped}

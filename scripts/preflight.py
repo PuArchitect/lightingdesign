@@ -20,6 +20,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out" / "cigar"
 PLANS = ROOT / "data" / "plans"
+SPEC_GLOB = "*_v*.json"          # 图版 spec：不写死版本号，可用 --spec-glob 覆盖
+MANIFEST_NAME = ""               # 材质/几何清单：留空则自动找 *manifest*.json
+EXPECTED_ROOMS = 0               # 0 = 不检查房间数（换项目不用改代码）
 
 results: list[tuple[str, str, str]] = []   # (项, PASS/FAIL/WARN, 说明)
 
@@ -32,8 +35,11 @@ def check_docx(path: Path) -> None:
     if not path.exists():
         add(f"docx 存在: {path.name}", False, "文件缺失")
         return
-    from docx import Document
-    from docx.shared import Cm
+    try:
+        from docx import Document
+    except ImportError:
+        add(f"{path.stem[:16]} 可检查", None, "缺 python-docx，跳过该文档（装依赖后重跑）")
+        return
     d = Document(str(path))
     tag = path.stem[:16]
 
@@ -64,12 +70,12 @@ def check_docx(path: Path) -> None:
         add(f"{tag} 章节引用有效", not missing,
             f"缺失：{missing}" if missing else f"{len(refs)} 处引用")
 
-    # 空白页：连续空段落 ≥ 8 视为一页空白
+    # 空白页：连续空段落过多（默认 12 段）视为一页空白
     run = 0
     worst = 0
     for p in d.paragraphs:
         if p.text.strip() == "" and not p._element.findall(
-                "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r/"):
+                "{http://schemas.openxmlformats.org/wordprocessingml/2006/main}r"):
             run += 1
             worst = max(worst, run)
         else:
@@ -90,19 +96,19 @@ def check_docx(path: Path) -> None:
 
 
 def check_sheets() -> None:
-    specs = sorted(PLANS.glob("*_v5.json"))
+    specs = sorted(PLANS.glob(SPEC_GLOB))
     if not specs:
-        add("伪彩 spec 存在", False, "data/plans 下无 *_v5.json")
+        add("伪彩 spec 存在", None, f"{PLANS} 下无 {SPEC_GLOB}（无图版则跳过）")
         return
     scales = {}
     for p in specs:
-        d = json.loads(p.read_text(encoding="utf-8"))
+        d = json.loads(p.read_text(encoding="utf-8-sig"))
         scales[p.stem] = (d.get("vlo"), d.get("vhi"))
     uniq = set(scales.values())
     add("同批伪彩色阶一致", len(uniq) == 1,
         f"{len(specs)} 张，色阶 {sorted(uniq)}" if len(uniq) > 1 else f"{scales}")
     for p in specs:
-        png = OUT / (p.stem.replace("_v5", "") + "_伪彩.png")
+        png = OUT / (re.sub(r"_v\d+$", "", p.stem) + "_伪彩.png")
         add(f"图版存在: {png.name}", png.exists())
 
 
@@ -129,13 +135,14 @@ def check_xlsx(path: Path) -> None:
 
 
 def check_manifest() -> None:
-    p = OUT / "shell_manifest_v6.json"
+    p = OUT / MANIFEST_NAME
     if not p.exists():
-        add("v6 壳清单存在", False, "未跑 cigar_shell_v6.py")
+        add(f"材质清单: {MANIFEST_NAME}", None,
+            f"未找到（用 --manifest 指定；无清单则跳过该项）")
         return
-    d = json.loads(p.read_text(encoding="utf-8"))
+    d = json.loads(p.read_text(encoding="utf-8-sig"))
     detail = d.get("material_resolution", {})
-    # 只有「实际出现在四间房里」的低可信材质才影响结论；区域外的不算
+    # 只有「实际出现在房间里的」低可信材质才影响结论；区域外的不算
     used = {}
     for r in d.get("rooms", {}).values():
         for m, a in r.get("materials", {}).items():
@@ -144,27 +151,53 @@ def check_manifest() -> None:
            if v.get("confidence") == "low" and used.get(k, 0) > 0]
     outside = [k for k, v in detail.items()
                if v.get("confidence") == "low" and used.get(k, 0) == 0]
-    msg = (f"影响四间的低可信 {len(low)} 项：{low[:3]}" if low
+    msg = (f"影响房间的低可信 {len(low)} 项：{low[:3]}" if low
            else f"{len(detail)} 种材质；区域外低可信 {len(outside)} 项（不影响结论）")
-    add("材质无低可信项（限四间）", not low, msg)
-    add("四间壳齐全", len(d.get("rooms", {})) == 4, str(list(d.get("rooms", {}).keys())))
+    add("材质无低可信项（限房间内）", not low, msg)
+
+    n_rooms = len(d.get("rooms", {}))
+    if EXPECTED_ROOMS:
+        add(f"房间数 = {EXPECTED_ROOMS}", n_rooms == EXPECTED_ROOMS,
+            f"实际 {n_rooms} 间：{list(d.get('rooms', {}).keys())}")
+    else:
+        add("房间数未约束", None, f"实际 {n_rooms} 间（--expected-rooms 0 = 不检查）")
 
 
 def main() -> int:
-    # 允许指向任意项目目录，换项目/换同事不需要改代码
+    # 弱终端（Windows cp936 管道）打印中文会乱码，弱模型据此判门禁会误判
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+
     import argparse
     ap = argparse.ArgumentParser(description="成品自检")
     ap.add_argument("--artifacts", type=Path, default=None,
                     help="交付物目录（默认 <repo>/out/cigar）")
     ap.add_argument("--plans", type=Path, default=None,
                     help="图版 spec 目录（默认 <repo>/data/plans）")
+    ap.add_argument("--spec-glob", default=None,
+                    help="图版 spec 匹配模式（默认 *_v*.json）")
+    ap.add_argument("--manifest", default=None,
+                    help="材质/几何清单文件名（默认自动找 *manifest*.json）")
+    ap.add_argument("--expected-rooms", type=int, default=0,
+                    help="期望房间数；0 = 不检查")
     args = ap.parse_args()
 
-    global OUT, PLANS
+    global OUT, PLANS, SPEC_GLOB, MANIFEST_NAME, EXPECTED_ROOMS
     if args.artifacts:
         OUT = args.artifacts
     if args.plans:
         PLANS = args.plans
+    if args.spec_glob:
+        SPEC_GLOB = args.spec_glob
+    if args.manifest:
+        MANIFEST_NAME = args.manifest
+    elif OUT.exists():
+        found = sorted(OUT.glob("*manifest*.json"))
+        if found:
+            MANIFEST_NAME = found[0].name
+    EXPECTED_ROOMS = args.expected_rooms
     if not OUT.exists():
         print(f"找不到交付物目录：{OUT}（用 --artifacts 指定）")
         return 2

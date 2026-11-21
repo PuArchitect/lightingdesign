@@ -115,9 +115,11 @@ def raypath_hint(paths: dict) -> str:
     parts.append(".")
     joined = os.pathsep.join(parts)
     if os.name == "nt":
-        return (f"当前会话：$env:RAYPATH = \"{joined}\"\n"
-                f"永久生效：setx RAYPATH \"{joined}\"")
-    return f"export RAYPATH=\"{joined}\""
+        return (f"PowerShell：$env:RAYPATH = \"{joined}\"\n"
+                f"cmd.exe   ：set RAYPATH={joined}\n"
+                f"git-bash  ：export RAYPATH=\"{joined}\"   # 用 ; 分隔需引号\n"
+                f"永久生效  ：setx RAYPATH \"{joined}\"")
+    return f"bash/zsh：export RAYPATH=\"{joined}\""
 
 
 def main() -> int:
@@ -125,6 +127,8 @@ def main() -> int:
     ap.add_argument("--install", action="store_true", help="缺什么装什么")
     ap.add_argument("--offline", action="store_true", help="从 wheels/ 离线安装")
     ap.add_argument("--yes", action="store_true", help="跳过确认")
+    ap.add_argument("--pkgs", default=None,
+                    help="只装指定包（逗号分隔），便于弱平台分批、规避 60 s 超时")
     args = ap.parse_args()
 
     try:
@@ -145,15 +149,22 @@ def main() -> int:
         ok = has_module(imp_name)
         rows.append({"pip": pip_name, "imp": imp_name, "use": use,
                      "required": required, "present": ok, "action": "-", "result": "-"})
-        if not ok and required:
-            to_install.append(pip_name)
-        elif not ok:
+        if not ok:
             to_install.append(pip_name)
 
     rad = find_radiance()
     print(f"Radiance: {'已就绪' if rad['ready'] else '缺失'}")
     if rad.get("bindir"):
         print(f"  bin: {rad['bindir']}")
+
+    # 分批安装：弱平台按 60 s 拆批，一次只装几个包
+    if args.pkgs:
+        want = {p.strip().replace("_", "-").lower()
+                for p in args.pkgs.split(",") if p.strip()}
+        skipped = [p for p in to_install if p.lower() not in want]
+        to_install = [p for p in to_install if p.lower() in want]
+        if skipped:
+            print(f"按 --pkgs 跳过: {', '.join(skipped)}（下次再装）")
 
     # ---- 是否安装
     if to_install and args.install:
@@ -196,10 +207,12 @@ def main() -> int:
 
     # ---- 定级
     have = {r["imp"]: r["present"] for r in rows}
-    if rad["ready"] and have.get("PIL") and have.get("openpyxl"):
+    # L3 需要 numpy：单位贡献率 / 线性反推都依赖它，文档与定级必须一致
+    if (rad["ready"] and have.get("PIL") and have.get("openpyxl")
+            and have.get("numpy")):
         level, why = "L3", "可做辐射计算 + 图版 + 表格 + 报告"
     elif have.get("PIL") and have.get("openpyxl"):
-        level, why = "L2", "无 Radiance：只能直射估算，报告须标 _L2"
+        level, why = "L2", "无 Radiance 或缺 numpy：只能直射估算，报告须标 _L2"
     else:
         level, why = "L1", "缺关键库：只能出模板与人工填表，报告须标 _L1"
 
