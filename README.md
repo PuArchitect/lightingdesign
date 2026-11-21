@@ -39,6 +39,9 @@ python scripts/bootstrap.py                # 只体检：缺什么、现在什�
 python scripts/bootstrap.py --install --yes   # 补齐（需网络；无需管理员权限）
 ```
 
+> **Windows 用户先看 [`WINDOWS.md`](WINDOWS.md)** —— 用哪个窗口输入，以及为什么你的 `python` 可能是 Microsoft Store 的假命令。
+> **Windows users:** read [`WINDOWS.md`](WINDOWS.md) first for the same reason.
+
 `bootstrap.py` writes two files:
 
 - `bootstrap_report.md` — what was installed, what is still missing, how to set `RAYPATH`

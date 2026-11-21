@@ -1,4 +1,4 @@
-﻿# 使用说明（详细）
+# 使用说明（详细）
 
 > 门面见 `README.md`；技能本体见 `SKILL.md`；仓库规则见 `AGENTS.md`。
 > 本文件是给人看的长期参考：四个平台怎么配、workbuddy 专项、质量怎么保证、怎么迭代。
@@ -14,6 +14,7 @@ lightingdesign/
 ├── AGENTS.md               仓库级硬规则（codex / zcode / workbuddy 自动读）
 ├── USAGE.md                本文件
 ├── WORKBUDDY.md            弱平台四步精简版（workbuddy 实测后写成）
+├── WINDOWS.md              Windows 上怎么跑（窗口选择、python 假命令陷阱）
 ├── scripts/
 │   ├── bootstrap.py        环境自举：扫描 → 补齐 → 复验（支持离线 wheels）
 │   ├── capability_probe.py 轻量探针（只报不装）
