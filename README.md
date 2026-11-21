@@ -1,4 +1,4 @@
-# AI for Classic Architects · lightingdesign draft quality
+﻿# AI for Interior Lighting Designers · lightingdesign
 
 For designers who turn spatial intent into light — private rooms, bars, restaurants, and the tiny teams working beside them. This skill is shared as a practical companion for turning "it looks right" into numbers someone else can check: materials, fixtures, illuminance, and a report that says honestly what it does not know. Cheers.
 
