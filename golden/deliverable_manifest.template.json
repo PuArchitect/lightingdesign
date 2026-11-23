@@ -1,0 +1,29 @@
+{
+  "id": "<平台 · 模型>",
+  "delivery_dir": "<交付目录，相对 research/result loop/ 或绝对路径>",
+  "platform": "<DeepSeek Harness / workbuddy / ...>",
+  "model": "<模型名>",
+  "level": "L3",
+  "skill_version": "v1.1",
+  "skill_commit": "<git commit，可空>",
+  "run_at": "YYYY-MM-DD",
+  "room": { "x0": 6.21, "x1": 11.69, "y0": 11.57, "y1": 15.27, "extent": "whole_room" },
+  "targets": {
+    "T-A": { "workplane_0_75m_lx": 75, "reported": false },
+    "T-B": { "ambient_lx": [40, 60], "table_lx": [90, 150], "accent_lx": [300, 500], "reported": false }
+  },
+  "files": {
+    "report": "<01_报告/xxx.pdf>",
+    "a3": "<02_图纸/xxx_A3.pdf>",
+    "pseudo": ["<伪彩 1>", "<伪彩 2>"],
+    "truecolor": [],
+    "lamp_table": "<灯具表.xlsx>",
+    "material_table": "<材料表.xlsx>",
+    "results": "<results.json>",
+    "preflight": "<preflight_report.txt>",
+    "readme": "00_README.md",
+    "handover": "01_交接清单.md"
+  },
+  "preflight": { "fail": 0, "warn": 0 },
+  "notes": "<已知偏差 / 待决>"
+}

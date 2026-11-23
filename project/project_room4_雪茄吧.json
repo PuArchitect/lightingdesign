@@ -1,0 +1,312 @@
+{
+  "schema": "lighting-project/1.1",
+  "project": {
+    "id": "cigar-bar-room4",
+    "name": "雪茄吧改造项目 · 房间四",
+    "client": "MR.CHILDREN",
+    "designer": "田野建筑 TIANYE ARCHITECTURE",
+    "date": "2026-11-23",
+    "purpose": "跨平台结果对比与技能 v1.2 的冻结题（golden task）"
+  },
+  "scope": {
+    "room_id": "ROOM4",
+    "extent": "whole_room",
+    "confirmed_by": "业主 / 设计方（用户 2026-11-23 确认）",
+    "confirmed_at": "2026-11-23",
+    "boundary_basis": "3dm 完成面隔墙内表面（2-INTR::墙面 / 1-ARCH::空间::墙）",
+    "bbox_m": {
+      "x0": 6.21,
+      "x1": 11.69,
+      "y0": 11.57,
+      "y1": 15.27,
+      "z0": 0.0,
+      "z1": 3.05
+    },
+    "size_m": {
+      "W": 5.48,
+      "D": 3.7
+    },
+    "area_design_m2": 20.35,
+    "area_stats_m2": 19.2,
+    "area_note": "设计范围 = 整间 5.48×3.70（含东侧门厅/更衣带、南侧挂边带）；统计平均照度与 Uo 时剔除东南角卫生间服务核约 1.1 m²，LPD 分母按 20.35 m²。",
+    "zones": [
+      {
+        "id": "Z1",
+        "name": "座区（西侧）",
+        "x": [
+          6.21,
+          10.28
+        ],
+        "y": [
+          11.57,
+          15.27
+        ],
+        "ceiling": "中央吊顶凹槽下方 + 周边跌级",
+        "role": "主使用区：2×2.4 m 沙发对坐 + 2×0.9 m 单椅 + 茶几"
+      },
+      {
+        "id": "Z2",
+        "name": "东侧门厅 / 更衣带",
+        "x": [
+          10.28,
+          11.69
+        ],
+        "y": [
+          12.08,
+          15.27
+        ],
+        "ceiling": "低吊顶 2.45–2.50",
+        "role": "入口、镜面、东墙壁炉台；必须纳入照明设计"
+      },
+      {
+        "id": "Z3",
+        "name": "东南角卫生间（服务核）",
+        "x": [
+          10.3,
+          11.69
+        ],
+        "y": [
+          11.57,
+          12.37
+        ],
+        "role": "建模保留，统计剔除"
+      }
+    ]
+  },
+  "ceiling": {
+    "perimeter_soffit_z": [
+      2.45,
+      2.5
+    ],
+    "central_recess": {
+      "bottom_z": 2.74,
+      "top_plate_z": 3.04,
+      "recess_m": {
+        "W": 3.72,
+        "D": 3.04,
+        "x": [
+          6.54,
+          10.26
+        ],
+        "y": [
+          11.91,
+          14.95
+        ]
+      },
+      "offset_note": "凹槽偏西：西侧余 0.34 m，东侧余 1.44 m"
+    },
+    "copper_top": {
+      "visible_plate_m": {
+        "W": 3.24,
+        "D": 2.56
+      },
+      "finish": "PAINT-brass-artistic（反射面，不是光源）"
+    },
+    "cove": {
+      "type": "铜顶倒棱台腔体内暗藏灯带（L1）",
+      "slot_mm": 15,
+      "status": "构造由 3dm 反推，缺天花剖面，需现场复核"
+    }
+  },
+  "targets": {
+    "status": "confirmed",
+    "confirmed_by": "业主 / 设计方（用户 2026-11-23 确认）",
+    "confirmed_at": "2026-11-23",
+    "dual_track": true,
+    "reporting_rule": "报告首页并列两栏：T-A 验收口径（用于判定/报审，标准语汇）与 T-B 运行口径（用于场景与调光，氛围语汇）；两套都写，不得混用，不得只写一套。",
+    "acceptance": {
+      "id": "T-A",
+      "name": "验收口径（国标）",
+      "metric": "维持平均照度（报告须注明 Radiance 结果为初始值，并给出 ×0.80 维护系数后的维持值）",
+      "workplane_0_75m_lx": 75,
+      "initial_design_lx": 94,
+      "maintenance_factor": 0.8,
+      "basis": "GB/T 50034-2024 表 5.3.5 酒吧间/咖啡厅 75 lx（条文数值以标准正文核对）",
+      "note": "验收判定一律用本口径；若业主选择更暗的氛围值，须在报告中作为业主决策书面记录，不得写成「达标」。"
+    },
+    "operation": {
+      "id": "T-B",
+      "name": "运行口径（氛围分层）",
+      "ambient_lx": [
+        40,
+        60
+      ],
+      "table_lx": [
+        90,
+        150
+      ],
+      "accent_lx": [
+        300,
+        500
+      ],
+      "wall_vertical_1_2m_lx": [
+        60,
+        250
+      ],
+      "scenes": [
+        "迎宾",
+        "品鉴",
+        "影音",
+        "深夜",
+        "清洁"
+      ],
+      "basis": "效果图与雪茄包间实际使用（会客 / 品鉴）；需业主书面确认"
+    },
+    "quality": {
+      "cct_k": 2700,
+      "ra_min": 90,
+      "r9_min": 50,
+      "ugr_max": 19,
+      "flicker": "波动深度 < 5%，SVM < 0.4",
+      "note": "UGR/频闪数值以标准正文与灯具实测为准；无 IES 时不得给 UGR 判定。"
+    },
+    "legacy_options": {
+      "T-A_old_draft": [
+        75
+      ],
+      "T-B_old_draft": [
+        [
+          40,
+          60
+        ],
+        [
+          90,
+          150
+        ],
+        [
+          300,
+          500
+        ]
+      ]
+    }
+  },
+  "photometry": {
+    "ies": "missing",
+    "level": "C",
+    "consequence": "绝对值 ±20–30%，不做 UGR 判定；相对分布与方案比较可用。",
+    "todo": "补灯带 / 洗墙 / 中角 / 窄角 / 壁灯 / 台灯六类 IES"
+  },
+  "materials": {
+    "status": "partial",
+    "confirmed": [
+      {
+        "part": "木饰面墙",
+        "rho": 0.15,
+        "source": "业主确认"
+      },
+      {
+        "part": "镜面",
+        "rho": 0.5,
+        "source": "业主确认（按哑光金属）"
+      },
+      {
+        "part": "沙发/单椅皮革",
+        "rho": 0.05,
+        "source": "业主说明"
+      }
+    ],
+    "pending": [
+      {
+        "part": "铜顶 ori-EMMRS-ceiling",
+        "rho": null,
+        "source": "待业主确认（最大受光面）"
+      },
+      {
+        "part": "艺术铜漆顶面",
+        "rho": null,
+        "source": "待确认"
+      },
+      {
+        "part": "DEFAULT-general white / 原结构混凝土",
+        "rho": null,
+        "source": "待确认是否外露"
+      }
+    ]
+  },
+  "capability": {
+    "required_level": "L3",
+    "reason": "目标含逐点照度与均匀度；L2 只能出趋势判断，不得作为验收依据。",
+    "level_must_be_printed_on_cover": true
+  },
+  "deliverables": [
+    "00_README.md（阅读顺序 / 结论 / 限制 / 复现）",
+    "01_交接清单.md（门禁 1，含房间认定三证据）",
+    "材料表_待确认.xlsx + shell_manifest.json",
+    "room4_shell.rad + 面数统计（完成面壳，含服务核遮挡）",
+    "lights.rad + 灯位表",
+    "room4_results.json（含服务核剔除规则与网格 mask）",
+    "伪彩图 ×2（0.75 m 工作面 / 0.02 m 地面，统一色阶，图注六要素）",
+    "A3 天花照明定位图（图签 / 图例 / 灯具表 / 施工说明 / 尺寸链 / 门窗 / 服务核）",
+    "报告 docx + pdf（封面 / 8 章 / 数据溯源 / 限制声明 / 设计依据 / T-A 与 T-B 并列）",
+    "preflight_report.txt（0 FAIL）"
+  ],
+  "open_items": [
+    "无 IES 配光",
+    "铜顶主材反射率未确认",
+    "灯槽腔体缺剖面，施工可安装性待复核",
+    "L7 筒灯在铜顶/东侧跌级的开孔位置未定（若采用）",
+    "北墙窗白天遮光策略未定",
+    "应急照明（GB 51309-2018）责任界面未界定"
+  ],
+  "evidence": [
+    {
+      "item": "完成面隔墙坐标",
+      "file": "local workbuddy+DeepSeek 4.1flash/00_输入资料/MR.CHILDREN-3.1.3dm",
+      "method": "rhino3dm 读取 2-INTR::墙面 / 1-ARCH::空间::墙"
+    },
+    {
+      "item": "房间四外轮廓 5.5×3.7",
+      "file": "local workbuddy+DeepSeek 4.1flash/00_输入资料/平面图/雪茄吧天花轮廓.pdf",
+      "method": "P-01 天花图 400 dpi 核对 + 长宽比 1.5"
+    },
+    {
+      "item": "天花造型 3.6×3.6（非净尺寸）",
+      "file": "result local deepseek harness/05_输出/cigar/plan.dxf",
+      "method": "ezdxf 闭合轮廓提取"
+    },
+    {
+      "item": "家具与灯具实例位置",
+      "file": "local workbuddy+DeepSeek 4.1flash/00_输入资料/MR.CHILDREN-3.1.3dm",
+      "method": "块实例变换（Sofa-A-2400 / Sofa-C-900 / 4-d50 light）"
+    }
+  ],
+  "regression": {
+    "golden_task": true,
+    "acceptance": {
+      "room_size_tolerance": "±1%",
+      "illuminance_tolerance_same_target": "±10%",
+      "flux_tolerance_same_target": "±10%",
+      "deliverable_checklist": "100% 齐全",
+      "preflight": "0 FAIL",
+      "targets_presence": "报告须同时出现 T-A（75 lx @0.75 m）与 T-B（40–60 / 90–150 / 300–500 lx）"
+    }
+  },
+  "changelog": [
+    {
+      "date": "2026-11-23",
+      "change": "v1.0 建立；确认房间范围=整间"
+    },
+    {
+      "date": "2026-11-23",
+      "change": "v1.1 目标确认为 T-A（验收 75 lx）+ T-B（运行 40–60 / 90–150 / 300–500 lx）并列"
+    }
+  ],
+  "report_theme": "cigar_dark",
+  "report_theme_note": "深色奢华主题仅因本项目为雪茄吧；换项目须按业主 CI/材质/CCT 重选，不得默认棕金",
+  "design_tone": {
+    "keywords": [
+      "暗",
+      "铜",
+      "木",
+      "私密"
+    ],
+    "cct_k": 2700,
+    "materials": [
+      "深色木饰面",
+      "艺术铜漆",
+      "黑色皮革"
+    ],
+    "brand_colors": [],
+    "cover_style": "dark"
+  }
+}

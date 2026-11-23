@@ -1,0 +1,30 @@
+{
+  "_comment": "报告主题模板：所有颜色都是 token，不绑定任何色系。复制本文件改值即可；或运行 scripts/tools/make_theme.py 生成。",
+  "id": "custom",
+  "label": "自定义项目主题",
+  "report_theme_note": "从业主 CI、主材、色温、参考图提取；没有依据时用 neutral_light",
+  "colors": {
+    "bg": "#FFFFFF",
+    "ink": "#111827",
+    "text_mid": "#1F2937",
+    "text_soft": "#374151",
+    "muted": "#6B7280",
+    "accent": "#0F766E",
+    "accent_dark": "#0B5A54",
+    "table_head": "#ECFDF5",
+    "table_head_ink": "#064E3B",
+    "line": "#D1FAE5",
+    "line_strong": "#A7F3D0",
+    "note_bg": "#F0FDFA",
+    "rh_line": "#D1FAE5",
+    "cover_bg": "#FFFFFF",
+    "cover_title": "#111827",
+    "cover_text": "#374151",
+    "cover_kicker": "#0F766E",
+    "cover_meta": "#6B7280",
+    "cover_en": "#6B7280",
+    "cover_border": "#D1FAE5",
+    "cover_border2": "#ECFDF5"
+  },
+  "fonts": { "body": "Microsoft YaHei", "display": "Microsoft YaHei" }
+}

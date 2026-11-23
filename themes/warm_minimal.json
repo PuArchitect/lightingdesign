@@ -1,0 +1,28 @@
+{
+  "id": "warm_minimal",
+  "label": "暖调极简（住宅 / 茶室 / 咖啡）",
+  "colors": {
+    "bg": "#FAF7F2",
+    "ink": "#2B2118",
+    "text_mid": "#3D3026",
+    "text_soft": "#4E4034",
+    "muted": "#8C7A68",
+    "accent": "#B4653A",
+    "accent_dark": "#8F4A28",
+    "table_head": "#F1E8DC",
+    "table_head_ink": "#4E4034",
+    "line": "#E3D6C6",
+    "line_strong": "#D3C2AC",
+    "note_bg": "#F7EEE3",
+    "rh_line": "#E3D6C6",
+    "cover_bg": "#F3ECE2",
+    "cover_title": "#2B2118",
+    "cover_text": "#4E4034",
+    "cover_kicker": "#B4653A",
+    "cover_meta": "#8C7A68",
+    "cover_en": "#8C7A68",
+    "cover_border": "#D3C2AC",
+    "cover_border2": "#E3D6C6"
+  },
+  "fonts": { "body": "Microsoft YaHei", "display": "Microsoft YaHei" }
+}

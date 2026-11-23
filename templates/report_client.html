@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{formal_title}}</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- 封面页 -->
+  <div class="cover-page">
+    <div>
+      <span class="cover-badge">{{capability_level}} 级照明设计交付 · {{version}}</span>
+      <h1 class="cover-title">{{project_name}} · {{room_name}}<br />室内照明设计方案说明书</h1>
+      <p class="cover-subtitle">数据来源：room_lock.json &amp; results.json（单一数据源自动生成）</p>
+    </div>
+
+    <div class="callout callout-warn">
+      <strong>可信度与验收口径声明：</strong>
+      几何可信度 <strong>{{grade_geometry}}</strong> ｜ 配光可信度 <strong>{{grade_photometry}}</strong> ｜ 材质可信度 <strong>{{grade_material}}</strong>。<br />
+      {{disclaimer_text}}
+    </div>
+
+    <div class="cover-meta">
+      <div><strong>项目名称：</strong>{{project_name}}</div>
+      <div><strong>设计区域：</strong>{{room_name}}（净面积 {{net_area_m2}} m²）</div>
+      <div><strong>计算级别：</strong>{{capability_level}}（{{calc_method}}）</div>
+      <div><strong>设计单位：</strong>{{company}}</div>
+      <div><strong>出图日期：</strong>{{date}}</div>
+      <div><strong>对应图纸：</strong>{{drawing_no}}（A3 1:25 定位图）</div>
+    </div>
+  </div>
+
+  <!-- 正文开始 -->
+  <div class="page-header">
+    <span>{{project_name}} · {{room_name}} 照明设计方案（{{capability_level}}）</span>
+    <span>{{version}}</span>
+  </div>
+
+  <section id="sec-0">
+    <h2>0. 设计依据与验收口径</h2>
+    <p>本方案依据：GB/T 50034-2024《建筑照明设计标准》、GB 55015-2021《建筑节能与可再生能源利用通用规范》、GB 51309-2018（应急照明，如含）及业主设计任务书。</p>
+    <div class="callout">
+      <strong>双口径声明：</strong>
+      <strong>T-A 验收口径</strong>：0.75 m 工作面维持平均照度 75 lx（初始设计值约 94 lx，维护系数 0.80）；用于判定与报审。<br />
+      <strong>T-B 运行口径</strong>：环境 40–60 lx、桌面 90–150 lx、重点 300–500 lx，分迎宾 / 品鉴 / 影音 / 深夜 / 清洁五场景；用于场景与调光。<br />
+      两套口径并列，不得混用。无 IES 配光时，绝对照度不确定度 ±20–30%，T-A 只作为设计目标，不写成施工验收条款。
+    </div>
+  </section>
+
+  <section id="sec-1">
+    <h2>1. 空间现状与几何基准</h2>
+    <p>本方案所有尺寸均从原始三维模型包围盒提取并经 <code>room_lock.json</code> 锁定，禁止目测或从效果图反推。</p>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">房间净尺寸</div><div class="kpi-value">{{length_mm}}×{{width_mm}} mm</div></div>
+      <div class="kpi-card"><div class="kpi-label">房间净面积</div><div class="kpi-value">{{net_area_m2}} m²</div></div>
+      <div class="kpi-card"><div class="kpi-label">中央天花标高</div><div class="kpi-value">{{ceiling_height_mm}} mm</div></div>
+      <div class="kpi-card"><div class="kpi-label">工作面平均照度</div><div class="kpi-value">{{workplane_avg_lx}} lx</div></div>
+    </div>
+  </section>
+
+  <section id="sec-2">
+    <h2>2. 照明目标与五层光策略</h2>
+    <p>{{lighting_strategy_summary}}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>光层</th>
+          <th>光源编号与类型</th>
+          <th>核心作用</th>
+          <th class="num">色温</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{layers_table_rows}}
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sec-3" class="page-break">
+    <h2>3. 灯具配置与控制回路表</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>编号</th>
+          <th>灯具名称</th>
+          <th>安装方式</th>
+          <th class="num">数量/长度</th>
+          <th class="num">光通量</th>
+          <th class="num">估算电功率</th>
+          <th>回路</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{fixtures_table_rows}}
+        <tr class="total-row">
+          <td colspan="4">合计（按 LED 系统光效 {{led_efficacy_lm_w}} lm/W 折算，{{efficacy_grade}} 级假定）</td>
+          <td class="num">{{total_lumens}}&nbsp;lm</td>
+          <td class="num">{{total_power_w}}&nbsp;W</td>
+          <td>LPD&nbsp;{{lpd_w_m2}}&nbsp;W/m²</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sec-4">
+    <h2>4. 天花定位与关键灯槽节点</h2>
+    <p>灯具精确模型坐标（mm）详见随附 A3 1:25 图纸（{{drawing_no}}）。关键灯槽构造及防眩遮挡关系如下：</p>
+    <div class="figure-box">
+      <img src="{{cove_detail_img}}" alt="灯槽节点大样" />
+      <div class="figure-caption">图 4-1：关键灯槽大样与出光方向示意（槽深与挑檐尺寸均来自实测模型）。</div>
+    </div>
+  </section>
+
+  <section id="sec-5" class="page-break">
+    <h2>5. 光学计算结果与五场景调光</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>计算测面与口径</th>
+          <th class="num">平均照度</th>
+          <th class="num">最小 / 最大</th>
+          <th class="num">均匀度 Uo</th>
+          <th class="num">有效测点数</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{illuminance_table_rows}}
+      </tbody>
+    </table>
+
+    <div class="figure-box">
+      <img src="{{falsecolor_img}}" alt="工作面照度伪彩摘要图" />
+      <div class="figure-caption">图 5-1：工作面（h=0.75 m）照度伪彩分布（色阶锁定 {{vlo}}–{{vhi}} lx，网格 {{grid_step_m}} m）。</div>
+    </div>
+
+    <h3>五场景调光矩阵（DALI / 调光回路）</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>场景名称</th>
+          <th>适用时段与氛围</th>
+          <th>各回路调光比例</th>
+          <th class="num">预计工作面照度</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{scenes_table_rows}}
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sec-6" class="page-break">
+    <h2>6. 待确认事项清单（必选）</h2>
+    <p>以下图模不一致、未定点位及待选样事项须在深化施工前由业主或室内设计师书面确认，本方案未作静默假设：</p>
+    <table>
+      <thead>
+        <tr>
+          <th>编号</th>
+          <th>类别</th>
+          <th>问题描述与影响</th>
+          <th>建议决策项</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{pending_items_rows}}
+      </tbody>
+    </table>
+  </section>
+
+  <section id="sec-7">
+    <h2>7. 计算依据、审计结果与局限说明（必选）</h2>
+    <div class="callout">
+      <strong>数值溯源与审计状态：</strong>
+      闭合校验偏差 <strong>{{closure_diff_pct}}%</strong>（阈值 ≤1.0%）；壳体材质审计 <strong>{{material_audit_status}}</strong>；
+      所有图表与表格均由 <code>results.json</code> 自动生成，详见《02_设计师复核与审计包》。
+    </div>
+    <ul>
+      {{limitations_list_items}}
+    </ul>
+  </section>
+
+</body>
+</html>

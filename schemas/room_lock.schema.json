@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LightingDesign Room Lock Schema (v2.1)",
+  "type": "object",
+  "required": ["schema_version", "room_name", "source_model", "cross_evidence", "bounds_mm", "net_dimensions_mm", "net_area_m2", "scope"],
+  "properties": {
+    "schema_version": { "type": "string", "enum": ["2.0", "2.1"] },
+    "room_name": { "type": "string", "minLength": 1 },
+    "room_id": { "type": "string" },
+    "source_model": { "type": "string", "minLength": 1 },
+    "source_project": { "type": "string" },
+    "source_hash": { "type": "string" },
+    "cross_evidence": { "type": "array", "minItems": 2, "items": { "type": "string", "minLength": 2 },
+      "description": "至少 2 条定位交叉证据，防止无分图层模型选错房间" },
+    "discrepancies_to_confirm": { "type": "array", "items": { "type": "string" } },
+    "bounds_mm": {
+      "type": "object",
+      "required": ["x_min", "x_max", "y_min", "y_max", "z_min", "z_max"],
+      "properties": {
+        "x_min": { "type": "number" }, "x_max": { "type": "number" },
+        "y_min": { "type": "number" }, "y_max": { "type": "number" },
+        "z_min": { "type": "number" }, "z_max": { "type": "number" }
+      }
+    },
+    "net_dimensions_mm": {
+      "type": "object",
+      "required": ["length", "width", "height"],
+      "properties": {
+        "length": { "type": "number", "exclusiveMinimum": 0 },
+        "width": { "type": "number", "exclusiveMinimum": 0 },
+        "height": { "type": "number", "exclusiveMinimum": 0 }
+      }
+    },
+    "net_area_m2": { "type": "number", "exclusiveMinimum": 0 },
+    "area_measured_m2": { "type": "number", "exclusiveMinimum": 0 },
+    "area_declared_m2": { "type": "number", "exclusiveMinimum": 0 },
+    "area_deviation_pct": { "type": "number", "minimum": 0 },
+    "area_method": { "type": "string", "description": "bbox / finished-wall polygon / confirmed plan" },
+    "scope": { "type": "string", "enum": ["whole_room", "seat_zone_only", "partial"] },
+    "zones": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "rect_mm"],
+        "properties": {
+          "id": { "type": "string" }, "name": { "type": "string" },
+          "rect_mm": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } },
+          "role": { "type": "string" }, "ceiling": { "type": "string" }
+        }
+      }
+    },
+    "openings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "rect_mm"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["门", "窗"] },
+          "rect_mm": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } },
+          "z_range_m": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+          "block": { "type": "string" }, "note": { "type": "string" }
+        }
+      }
+    },
+    "ceiling": {
+      "type": "object",
+      "properties": {
+        "soffit_z_m": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+        "soffit_z_range_m": { "type": "array", "minItems": 2, "maxItems": 2, "items": { "type": "number" } },
+        "recess": {
+          "type": "object",
+          "properties": {
+            "rect_mm": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } },
+            "bottom_z_m": { "type": "number" }, "top_z_m": { "type": "number" }
+          }
+        },
+        "copper_plate": {
+          "type": "object",
+          "properties": {
+            "rect_mm": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } },
+            "z_m": { "type": "number" }, "material": { "type": "string" }
+          }
+        }
+      }
+    },
+    "service_core": {
+      "type": "object",
+      "properties": {
+        "rect_mm": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "number" } },
+        "note": { "type": "string" }
+      }
+    },
+    "signoff": {
+      "type": "object",
+      "properties": {
+        "confirmed_by": { "type": "string" }, "confirmed_at": { "type": "string" }, "date": { "type": "string" }
+      }
+    },
+    "detected_layers": { "type": "array", "items": { "type": "string" } },
+    "warnings": { "type": "array", "items": { "type": "string" } },
+    "confidence": { "type": "string" }
+  }
+}

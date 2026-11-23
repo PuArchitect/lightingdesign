@@ -1,0 +1,28 @@
+{
+  "id": "neutral_light",
+  "label": "中性专业（办公 / 住宅 / 商业通用）",
+  "colors": {
+    "bg": "#FFFFFF",
+    "ink": "#111827",
+    "text_mid": "#1F2937",
+    "text_soft": "#374151",
+    "muted": "#6B7280",
+    "accent": "#2563EB",
+    "accent_dark": "#1D4ED8",
+    "table_head": "#F3F4F6",
+    "table_head_ink": "#111827",
+    "line": "#E5E7EB",
+    "line_strong": "#D1D5DB",
+    "note_bg": "#EFF6FF",
+    "rh_line": "#E5E7EB",
+    "cover_bg": "#FFFFFF",
+    "cover_title": "#111827",
+    "cover_text": "#374151",
+    "cover_kicker": "#2563EB",
+    "cover_meta": "#6B7280",
+    "cover_en": "#6B7280",
+    "cover_border": "#D1D5DB",
+    "cover_border2": "#E5E7EB"
+  },
+  "fonts": { "body": "Microsoft YaHei", "display": "Microsoft YaHei" }
+}

@@ -8,3 +8,8 @@ out/
 data/plans/
 # 离线 wheel 体积大，按需自备
 wheels/*.whl
+examples/
+_work/
+ld_tmp/
+*.log
+.venv/

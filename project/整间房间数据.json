@@ -1,0 +1,53 @@
+{
+  "schema": "canonical-room/1.0",
+  "room": {
+    "id": "ROOM4",
+    "name": "雪茄吧 · 房间四",
+    "extent": "whole_room",
+    "confirmed_at": "2026-11-23",
+    "bbox_m": { "x0": 6.21, "x1": 11.69, "y0": 11.57, "y1": 15.27, "z0": 0.0, "z1": 3.05 },
+    "size_m": { "W": 5.48, "D": 3.70 },
+    "area_m2": 20.35,
+    "local_origin_mm": [6200, 11570],
+    "zones": [
+      { "id": "Z1", "name": "座区", "rect": [6.21, 11.57, 11.69, 15.27], "note": "含中央吊顶凹槽下方与周边跌级" },
+      { "id": "Z2", "name": "东侧门厅 / 更衣带", "rect": [10.28, 12.08, 11.69, 15.27], "note": "低吊顶 2.45–2.50；镜面、东墙壁炉台" },
+      { "id": "Z3", "name": "东南角卫生间（服务核）", "rect": [10.30, 11.57, 11.69, 12.37], "note": "建模保留，统计剔除" }
+    ]
+  },
+  "ceiling": {
+    "soffit_z": [2.45, 2.50],
+    "recess": { "rect": [6.54, 11.91, 10.26, 14.95], "bottom_z": 2.74, "top_z": 3.04 },
+    "copper_plate": { "rect": [6.78, 12.15, 10.02, 14.71], "z": 3.04, "material": "PAINT-brass-artistic" },
+    "cove": { "position": "铜顶倒棱台腔体内", "slot_mm": 15, "source": "3dm 反推；缺天花剖面" }
+  },
+  "openings": [
+    { "id": "D1", "type": "门", "rect": [6.59, 11.42, 7.39, 11.57], "block": "2-DOOR-M0924", "note": "南墙西端" },
+    { "id": "D2", "type": "门", "rect": [9.79, 11.42, 10.59, 11.57], "block": "2-DOOR-M0924", "note": "南墙东端" },
+    { "id": "W1", "type": "窗", "rect": [8.405, 15.24, 10.005, 15.27], "z_range_m": [0.82, 2.08], "block": "2-blades window-400*1200", "note": "北墙 4 扇 400×1200，百叶关闭" }
+  ],
+  "fixtures_in_model": [
+    { "id": "L3", "type": "d50 筒灯", "count": 3, "positions_m": [[8.20, 13.43, 3.04], [8.40, 13.43, 3.04], [8.60, 13.43, 3.04]], "block": "4-d50 light", "note": "模型实位，间距 0.20 m，是一支三头灯" },
+    { "id": "L6", "type": "LOGO 背光", "rect": [6.21, 13.20, 6.35, 13.73], "z_range_m": [1.35, 1.88], "material": "ori-EMMRS-logo back-2700k", "note": "西墙" }
+  ],
+  "furniture_instances": [
+    { "block": "Sofa-A-2400", "positions_m": [[7.80, 12.52], [7.80, 14.32]], "note": "两组 2.4 m 沙发对坐" },
+    { "block": "Sofa-C-900-single", "positions_m": [[7.10, 13.19], [7.10, 13.65]], "note": "西侧两把单椅，约 45°" },
+    { "block": "电视-80''", "positions_m": [[11.67, 14.73]], "note": "东墙壁炉台一侧（模型实位）" },
+    { "block": "茶几", "note": "活动家具层挤出体 1000×600，h=300，黄铜面" }
+  ],
+  "structure": {
+    "slab_bottom_m": [4.40, 4.60],
+    "column": { "rect": [10.80, 10.97, 12.00, 12.17], "note": "东南角柱" }
+  },
+  "confidence": {
+    "geometry": "B+（3dm 完成面 + 天花 Brep 分层 + 家具/灯具实例；服务核顶棚有缺口）",
+    "openings": "B（门窗块实例位置，未见门窗表）",
+    "materials": "C（待确认铜顶/艺术漆反射率）"
+  },
+  "sources": [
+    "MR.CHILDREN-3.1.3dm（rhino3dm 8.35 读取）",
+    "雪茄吧天花轮廓.pdf（P-01，400 dpi 核对）",
+    "plan.dxf（ezdxf 闭合轮廓）"
+  ]
+}

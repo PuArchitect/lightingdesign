@@ -1,0 +1,23 @@
+{
+  "id": "S4 · workbuddy + DeepSeek 4.1 Flash（新电脑，L3）",
+  "delivery_dir": "result new computer workbuddy + deepseek flash 4.1 test/照明设计_ROOM4_v1",
+  "platform": "workbuddy",
+  "model": "DeepSeek 4.1 Flash",
+  "level": "L3",
+  "skill_version": "v1.1.0",
+  "run_at": "2026-11-21",
+  "room": { "x0": 6.52, "x1": 10.28, "y0": 11.89, "y1": 14.97, "extent": "recess_only" },
+  "files": {
+    "report": "照明设计报告_房间四_v1.docx",
+    "a3": null,
+    "pseudo": ["ROOM4_h075_伪彩.png", "ROOM4_h002_伪彩.png"],
+    "truecolor": [],
+    "lamp_table": "灯具表_房间四.xlsx",
+    "material_table": "材料表_待确认_房间四.xlsx",
+    "results": "03_数据与审计/room4_results.json",
+    "preflight": "03_数据与审计/preflight_report.txt",
+    "readme": "00_README.md",
+    "handover": "01_交接清单.md"
+  },
+  "notes": "结构最干净、75 分钟完成；但房间口径为吊顶凹槽（11.58 m²），无 A3，目标为 90/80 lx 非 T-A + T-B。"
+}

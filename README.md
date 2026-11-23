@@ -28,24 +28,24 @@ Use `lightingdesign` (or `lighting`) in a request where this skill is installed.
 
 ## Install / 安装
 
-Clone this repository into the working directory of your agent, then run the bootstrap once:
+Clone this repository into the working directory of your agent, then run the environment probe once:
 
-把这个仓库克隆到你 Agent 的工作目录，然后跑一次自举：
+把这个仓库克隆到你 Agent 的工作目录，然后跑一次环境指纹：
 
 ```bash
 git clone https://github.com/PuArchitect/lightingdesign.git
 cd lightingdesign
-python scripts/bootstrap.py                # 只体检：缺什么、现在什么级别
-python scripts/bootstrap.py --install --yes   # 补齐（需网络；无需管理员权限）
+python scripts/00_preflight_env.py --project-id demo --out env_fingerprint.json
 ```
 
 > **Windows 用户先看 [`WINDOWS.md`](WINDOWS.md)** —— 用哪个窗口输入，以及为什么你的 `python` 可能是 Microsoft Store 的假命令。
 > **Windows users:** read [`WINDOWS.md`](WINDOWS.md) first for the same reason.
 
-`bootstrap.py` writes two files:
+`00_preflight_env.py` writes `env_fingerprint.json`:
 
-- `bootstrap_report.md` — what was installed, what is still missing, how to set `RAYPATH`
-- `capabilities.json` — the resulting level: `L3` / `L2` / `L1`
+- capability level: `L3` / `L2` / `L1`
+- `radiance_smoke` — real rtrace smoke test (2.176 W/m² ±5%)
+- `ascii_workdir` / `warnings`
 
 ### Platform notes / 各平台
 
@@ -75,3 +75,26 @@ python scripts/bootstrap.py --install --yes   # 补齐（需网络；无需管�
 ## License / 许可
 
 Internal team use. Ask before redistributing outside the studio.
+
+
+## v2.5.0 / 2026-11
+
+本版把“交付”写成硬标准：
+
+- **六类图**：平面布局图、剖面示意图、照度图、大样图、灯光渲染图、灯具表，缺一终审 FAIL。
+- **46 项终审**：`scripts/06_preflight_delivery.py --lint`，含物理溯源、闭合校验、交接清单、质检预览、state 签核。
+- **报告主题开放**：`themes/` 只定义 token；用 `scripts/tools/make_theme.py` 按业主 CI / 主材 / 色温生成任意配色与封面调性，不规定棕金。
+- **两条报告路径**：Story（HTML/CSS → PDF，无浏览器）为主；`05b_fill_report.py` + `05_build_report_pdf.py` 为有浏览器备选。
+- **物理真算**：`02_rad_core.py` 被 `calc_room4.py` 直接调用，产出 shell/lights rad、fine_grid 与闭合审计。
+
+快速开始：
+
+```powershell
+python scripts/00_preflight_env.py --project-id my_project --out work/env_fingerprint.json
+python scripts/01b_room_lock_from_project.py --project project/project_room4_雪茄吧.json --canonical project/整间房间数据.json --out-json work/room_lock.json --out-png work/00_房间边界确认图.png
+python scripts/04_render_svg_a3.py --room-lock work/room_lock.json --results work/results.json --out-svg work/L-04.svg
+python scripts/tools/svg_to_a3_pdf.py --svg work/L-04.svg --out-pdf work/L-04_A3.pdf
+python scripts/tools/make_theme.py --base neutral_light --accent "#0F766E" --cover-style light --out themes/my_project.json
+python scripts/tools/report_story_room4.py --theme themes/my_project.json
+python scripts/06_preflight_delivery.py --delivery-dir work/delivery --project project/project_room4_雪茄吧.json --lint
+```

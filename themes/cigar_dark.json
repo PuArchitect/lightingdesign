@@ -1,0 +1,28 @@
+{
+  "id": "cigar_dark",
+  "label": "深色奢华（雪茄吧 / 威士忌吧 / 私宴）",
+  "colors": {
+    "bg": "#FCFAF6",
+    "ink": "#241E18",
+    "text_mid": "#3A2E24",
+    "text_soft": "#4A3A2A",
+    "muted": "#8A7A66",
+    "accent": "#A8763E",
+    "accent_dark": "#8B4A20",
+    "table_head": "#F0E6D5",
+    "table_head_ink": "#5A4632",
+    "line": "#E8DDC9",
+    "line_strong": "#D8C7AC",
+    "note_bg": "#F6EFE2",
+    "rh_line": "#DFD2BC",
+    "cover_bg": "#221A14",
+    "cover_title": "#F6EAD6",
+    "cover_text": "#D9C6A9",
+    "cover_kicker": "#B99A72",
+    "cover_meta": "#C9A470",
+    "cover_en": "#A8895F",
+    "cover_border": "rgba(200,160,110,0.45)",
+    "cover_border2": "rgba(200,160,110,0.35)"
+  },
+  "fonts": { "body": "Microsoft YaHei", "display": "Microsoft YaHei" }
+}

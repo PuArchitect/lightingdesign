@@ -1,0 +1,23 @@
+{
+  "id": "S3 · workbuddy + DeepSeek 4.1 Flash（本机，L2）",
+  "delivery_dir": "local workbuddy+DeepSeek 4.1flash/01_交付/雪茄吧_房间四_照明设计方案_L2_v1",
+  "platform": "workbuddy",
+  "model": "DeepSeek 4.1 Flash",
+  "level": "L2",
+  "skill_version": "v1.1",
+  "run_at": "2026-11-21",
+  "room": { "x0": 6.44, "x1": 10.26, "y0": 11.70, "y1": 14.95, "extent": "seat_zone_only" },
+  "files": {
+    "report": "01_说明书/照明设计说明_房间四_L2_v1.pdf",
+    "a3": "02_图纸/L-04_天花照明定位图_1-25_A3.pdf",
+    "pseudo": [],
+    "truecolor": [],
+    "lamp_table": "03_表格/灯具表_房间四_v1.csv",
+    "material_table": null,
+    "results": "04_数据与审计/calc.json",
+    "preflight": null,
+    "readme": "00_README.md",
+    "handover": null
+  },
+  "notes": "唯一有 A3 的样本；但房间口径为吊顶凹槽（12.41 m²），L2 无辐射计算，缺材料表 / 交接清单 / preflight。"
+}

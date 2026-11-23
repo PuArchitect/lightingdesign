@@ -1,0 +1,23 @@
+{
+  "id": "S1 · DeepSeek Harness（本机）",
+  "delivery_dir": "result local deepseek harness/06_交付物",
+  "platform": "DeepSeek Harness",
+  "model": "DeepSeek v4.1 Flash",
+  "level": "L3",
+  "skill_version": "v1.1",
+  "run_at": "2026-11-21",
+  "room": { "x0": 6.20, "x1": 11.70, "y0": 11.57, "y1": 15.27, "extent": "whole_room" },
+  "files": {
+    "report": "01_报告/雪茄吧_照明设计报告_v6_四间.pdf",
+    "a3": null,
+    "pseudo": ["02_图版/伪彩/room4_伪彩.png"],
+    "truecolor": ["02_图版/真彩/v5_S1_坐看北.png"],
+    "lamp_table": "03_表格/雪茄吧_全店_灯具表_v1.xlsx",
+    "material_table": "03_表格/雪茄吧_材料表_待确认.xlsx",
+    "results": "04_数据与审计/bar_v6_results.json",
+    "preflight": "04_数据与审计/preflight_report.txt",
+    "readme": "00_README.md",
+    "handover": null
+  },
+  "notes": "交付包内无 01_交接清单（在 07_文档/项目01-…交接现状.md）；无 A3；目标为座位 60 / 茶几 50 lx，非 T-A + T-B。"
+}

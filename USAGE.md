@@ -1,140 +1,65 @@
-# 使用说明（详细）
+# 使用说明（v2.5.0）
 
-> 门面见 `README.md`；技能本体见 `SKILL.md`；仓库规则见 `AGENTS.md`。
-> 本文件是给人看的长期参考：四个平台怎么配、workbuddy 专项、质量怎么保证、怎么迭代。
-
----
-
-## 1. 包里有什么
+## 1. 包结构
 
 ```
 lightingdesign/
-├── README.md               门面（安装 / 调用 / 能做什么）
-├── SKILL.md                技能本体（铁律 / 七阶段门禁 / 降级阶梯 / 反模式）
-├── AGENTS.md               仓库级硬规则（codex / zcode / workbuddy 自动读）
-├── USAGE.md                本文件
-├── WORKBUDDY.md            弱平台四步精简版（workbuddy 实测后写成）
-├── WINDOWS.md              Windows 上怎么跑（窗口选择、python 假命令陷阱）
+├── SKILL.md              技能本体（冻结题 / 七阶段 / 六类图 / 46 项终审）
+├── AGENTS.md             仓库级硬规则
+├── README.md             门面
+├── USAGE.md              本文件
+├── WINDOWS.md            Windows 运行注意
+├── WORKBUDDY.md          WorkBuddy 精简流程
 ├── scripts/
-│   ├── bootstrap.py        环境自举：扫描 → 补齐 → 复验（支持离线 wheels）
-│   ├── capability_probe.py 轻量探针（只报不装）
-│   ├── naming_resolver.py  通用材质/图层命名解析
-│   ├── preflight.py        成品自检（可 --artifacts 指向任意项目）
-│   └── tyarch.json         某工作室的命名档案示例（换工作室只改这个）
-├── templates/
-│   ├── 01_交接清单.md
-│   ├── 02_材料表模板.md
-│   └── 03_报告骨架.md
-└── wheels/                 离线安装包存放处（.whl）
+│   ├── 00_preflight_env.py       环境指纹与 Radiance 冒烟
+│   ├── 00_state_manager.py       状态机 / 交接单 / 能力级校验
+│   ├── 01b_room_lock_from_project.py  冻结题 → room_lock + 确认图
+│   ├── 02_rad_core.py           光学换算 / 灯槽 / 材质映射
+│   ├── 03_audit_closure.py      闭合审计
+│   ├── 04_render_svg_a3.py      A3 1:25 定位图
+│   ├── 05_build_report_pdf.py   浏览器打印（备选）
+│   ├── 05b_fill_report.py       模板占位符填充（备选）
+│   ├── 06_preflight_delivery.py 46 项终审
+│   ├── 07_visual_qc_lint.py     视觉/版式 lint
+│   ├── 08_orchestrator.py       多 Agent 驱动
+│   └── tools/                   svg→pdf、Story 报告、主题生成、审计
+├── agents/               5 张角色卡
+├── PROMPTS/              Start + A/B/C/D 提示词 + Runbook
+├── schemas/              room_lock / results JSON Schema
+├── themes/               neutral_light / cigar_dark / warm_minimal / _template
+├── golden/               交付校验器 + manifest 模板
+└── project/              雪茄吧房间四冻结题与实测几何（示例）
 ```
 
----
+## 2. 快速开始
 
-## 2. 首次使用：先自举，再干活
-
-```bash
-python scripts/bootstrap.py                       # 体检，不动系统
-python scripts/bootstrap.py --install --yes       # 补齐
-python scripts/bootstrap.py --install --offline --yes   # 用 wheels/ 离线补齐
+```powershell
+python scripts/00_preflight_env.py --project-id demo --out work/env_fingerprint.json
+python scripts/01b_room_lock_from_project.py --project project/project_room4_雪茄吧.json --canonical project/整间房间数据.json --out-json work/room_lock.json --out-png work/00_房间边界确认图.png
+# Stage 2/3 由 Agent B 产出 scheme_init.json / results.json / closure_audit.json
+python scripts/04_render_svg_a3.py --room-lock work/room_lock.json --results work/results.json --out-svg work/L-04.svg
+python scripts/tools/svg_to_a3_pdf.py --svg work/L-04.svg --out-pdf work/L-04_A3.pdf
+python scripts/tools/make_theme.py --base neutral_light --accent "#0F766E" --cover-style light --out themes/my_project.json
+python scripts/tools/report_story_room4.py --theme themes/my_project.json
+python scripts/06_preflight_delivery.py --delivery-dir work/delivery --project project/project_room4_雪茄吧.json --lint
 ```
 
-它做三件事：**扫描 → 补齐 → 复验**，产出 `bootstrap_report.md` 与 `capabilities.json`。
+## 3. 报告主题
 
-### 为什么不需要装 Radiance 应用
+- 不规定配色：模板只定义 token；主题从业主 CI / 主材 / 色温 / 参考图提取；
+- `neutral_light` 默认，`cigar_dark` 只用于深色奢华（雪茄/威士忌吧），`warm_minimal` 用于住宅/茶室；
+- 主题只改视觉，**不改文案与结论**；
+- `project.json` 的 `design_tone` 记录依据，`report_theme` 记录选择。
 
-`pyradiance` 的 wheel **自带 Windows 预编译的 `oconv / rtrace / rpict / evalglare`**，
-`pip install pyradiance` 后二进制在 `site-packages/pyradiance/bin`。
-**不需要管理员权限、不需要跑安装程序、不需要配 PATH。**
+## 4. 终审 46 项
 
-**但必须配 `RAYPATH`**（bin + lib），否则 `rtrace` 找不到 `rayinit.cal`，
-会对每条光线返回 `1,1,1` —— **给出看起来合理、实际全错的数**。`bootstrap.py` 会打印该导出的值。
+`06_preflight_delivery.py --lint` 检查：冻结题一致性、能力级、T-A/T-B、六类图（报告内+交付目录）、物理溯源、闭合校验、交接清单、质检预览页数、state 签核、A3 图幅/文本层、README 双轨、体积、重复段落等。
 
-### 补不齐就降级
+## 5. 常见问题
 
-| 缺什么 | 处理 |
+| 现象 | 处理 |
 |---|---|
-| pillow / openpyxl / numpy | 必装；装不上只能 L1 |
-| pyradiance | 降 L2，封面标 `_L2`，只做直射估算 |
-| python-docx | 用 md 交付，标 `_L2` |
-| 无网络 | `wheels/` 离线装 |
-| 没有 Python | 停，或 L1 手工填模板 |
-
-**绝不允许环境不齐却按 L3 的口径出报告。**
-
----
-
-## 3. 四个平台的接入
-
-| 平台 | 怎么接 | 建议级别 |
-|---|---|---|
-| **DeepSeek Harness** | 工作目录指向本仓库，或把 `SKILL.md` 放进 skills 目录 | L3 |
-| **ChatGPT work / codex** | 仓库根作为工作目录，`AGENTS.md` 自动生效 | L3（先自举） |
-| **zcode** | 同上；长任务拆批，每批产物落盘 | L2–L3 |
-| **workbuddy** | 同上；**默认按 L2 设计**；已本机实测通过（2026-11-21） | L2 |
-
-四个平台都能读 `AGENTS.md`，这是最稳的公共入口。
-
----
-
-## 4. workbuddy 专项
-
-workbuddy 更容易掉质量，原因通常不是模型弱，而是**长流程**：
-上下文被日志挤占、命令超时、包缺失、中途忘了前面确认过的事实。
-
-技能里已内置对策，使用时不需额外配置：
-
-1. **阶段化落盘**：每阶段必须写出一个文件，用"文件存在"代替"我觉得做完了"
-2. **单步可恢复**：中断后从文件继续，不依赖上下文记忆
-3. **零依赖优先**：自检用标准库；出图用 PIL；表格用 openpyxl
-4. **长命令拆批**：单条 < 60 s，结果落盘
-5. **默认 L2**：不假设有 Radiance
-
-**如果连 Python 都跑不了** → 只做 L1：用 `templates/` 手工填，封面标 `_L1`。
-**这比硬着头皮编数字好一万倍。**
-
----
-
-## 5. 质量不会掉的关键设计
-
-这个包不靠"模型够聪明"来保证质量，靠三件事：
-
-| 机制 | 作用 |
-|---|---|
-| **门禁** | 每阶段结束必须产出文件并停下等人确认，不允许一口气跑完 |
-| **降级阶梯** | 能力不足时**降低计算等级**，而不是降低报告标准 |
-| **自检** | `preflight.py` 不需要懂业务，也能查出排版/引用/色阶问题 |
-
-一句话：**能力可以降，标准不能降；不能算就写"没算"，不许写"算过"。**
-
----
-
-## 6. 自检怎么用
-
-```bash
-python scripts/preflight.py --artifacts <项目>/out/cigar --plans <项目>/data/plans
-```
-
-检查项：markdown 残留、章节引用、空白页、图幅（按**实际版心**判定）、同批色阶一致、低可信材质。
-
-**0 FAIL 才能交付。** WARN 需人工看一眼。
-
----
-
-## 7. 迭代方式
-
-建议每个项目结束后只更新一处：`SKILL.md` §4「反模式」表。
-**新增一条反模式 = 一次真实踩坑**，比写十条"最佳实践"有用。
-
-版本号写在 `SKILL.md` 第 3 行；`AGENTS.md` 引用版本号，避免两者脱节。
-
----
-
-## 8. 已验证的真实案例
-
-本技能的流程来自一个真实项目（雪茄吧四间包房）：
-
-- 真实网格约 47 万三角面，oconv 15 s，rtrace 0.14 s/点
-- 用"单位光通贡献率"量出：洗墙对座位的效率是铜顶灯槽的 **4.2 倍**
-- 四间交叉验证：房一算 54.6 lx，既有汇总 54.7 lx（差 0.2%）
-- 自检 31 项，0 FAIL
-- 期间踩的 7 个坑全部收进 §4 反模式表
+| 能力判定 L2 | 查 `env_fingerprint.json` 的 `radiance_smoke` 与 `warnings`；RAYPATH 配好再重跑 |
+| 报告中文变方块 | 用 Story 路径（PyMuPDF 内嵌字体）或安装中文字体 |
+| A3 中文缺失 | 用 `svg_to_a3_pdf.py`（PyMuPDF 矢量路径），不依赖浏览器 |
+| 终审缺交接清单/质检预览 | 按 `01_交接清单.md`、`05_质检预览/pNN.png` 补齐 |

@@ -1,0 +1,23 @@
+{
+  "id": "S2 · workbuddy + MiniMax M3.1（本机）",
+  "delivery_dir": "local workbuddy+minimax  m 3.1/01_成果_定稿v2/雪茄吧_房间四_L3_v2",
+  "platform": "workbuddy",
+  "model": "MiniMax M3.1",
+  "level": "L3",
+  "skill_version": "v1.1",
+  "run_at": "2026-11-23",
+  "room": { "x0": 6.20, "x1": 11.70, "y0": 11.57, "y1": 15.27, "extent": "whole_room" },
+  "files": {
+    "report": "01_报告/雪茄吧_房间四_照明设计报告_v2.pdf",
+    "a3": null,
+    "pseudo": ["02_图版/房间四_伪彩.png"],
+    "truecolor": ["02_图版/房间四_真彩渲染_主视角.png"],
+    "lamp_table": "03_表格/灯具表_房间四.xlsx",
+    "material_table": "03_表格/材料表_房间四_待确认.xlsx",
+    "results": "04_数据与审计/room4_results.json",
+    "preflight": "04_数据与审计/preflight_report.txt",
+    "readme": "00_README.md",
+    "handover": "01_交接清单.md"
+  },
+  "notes": "房间口径正确；无 A3；目标为工作面 100 lx + 铜顶裙边 12 cd/m²，未按 T-A + T-B 并列。"
+}
